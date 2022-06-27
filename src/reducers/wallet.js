@@ -13,7 +13,7 @@ const wallet = (state = INITIAL_STATE, action) => {
   case GET_ALL_CURRENCIES:
     return {
       ...state,
-      currencies: payload.filter((currencie) => currencie !== 'USDT'),
+      currencies: action.payload.filter((currencie) => currencie !== 'USDT'),
     };
   default: return state;
   }
