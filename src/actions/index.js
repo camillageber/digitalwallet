@@ -2,7 +2,7 @@
 
 export const SAVE_LOGIN = 'SAVE_LOGIN';
 
-const saveLogin = (email) => ({
+export const saveLogin = (email) => ({
   type: SAVE_LOGIN,
   payload: email,
 });
