@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { fetchCurrenciesAllThunk } from '../actions';
+import ExpensesForm from '../components/ExpensesForm';
 
 class Wallet extends React.Component {
   componentDidMount() {
@@ -10,20 +11,25 @@ class Wallet extends React.Component {
   }
 
   render() {
-    const { email } = this.props;
+    const { email, currencies } = this.props;
 
     return (
-      <header>
-        <h3 data-testid="email-field">
-          { email }
-        </h3>
-        <p data-testid="total-field">
-          0
-        </p>
-        <p data-testid="header-currency-field">
-          BRL
-        </p>
-      </header>
+      <div>
+        <header>
+          <h3 data-testid="email-field">
+            { email }
+          </h3>
+          <p data-testid="total-field">
+            0
+          </p>
+          <p data-testid="header-currency-field">
+            BRL
+          </p>
+        </header>
+        <main>
+          <ExpensesForm currencies={ currencies } />
+        </main>
+      </div>
     );
   }
 }
@@ -31,6 +37,7 @@ class Wallet extends React.Component {
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
   getAllCurrencies: PropTypes.func.isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 const mapStateToProps = (state) => ({
