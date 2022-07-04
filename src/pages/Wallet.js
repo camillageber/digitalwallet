@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { saveCurrencies, fetchExpensesThunk } from '../actions';
 import ExpenseForm from '../components/ExpensesForm';
+import TableExpenses from '../components/TableExpenses';
 
 class Wallet extends React.Component {
   async componentDidMount() {
@@ -20,6 +21,7 @@ class Wallet extends React.Component {
           <p data-testid="header-currency-field">BRL</p>
         </header>
         <ExpenseForm currencies={ currencies } />
+        <TableExpenses />
       </div>
     );
   }
