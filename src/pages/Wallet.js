@@ -1,54 +1,45 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchCurrenciesAllThunk } from '../actions';
-import ExpensesForm from '../components/ExpensesForm';
+import PropTypes from 'prop-types';
+import { saveCurrencies, fetchExpensesThunk } from '../actions';
+import ExpenseForm from '../components/ExpensesForm';
 
 class Wallet extends React.Component {
-  componentDidMount() {
-    const { getAllCurrencies } = this.props;
-    getAllCurrencies();
+  async componentDidMount() {
+    const { dispatch } = this.props;
+    dispatch(fetchExpensesThunk(saveCurrencies));
   }
 
   render() {
-    const { email, currencies } = this.props;
-
+    const { email, total, currencies } = this.props;
     return (
       <div>
         <header>
-          <h3 data-testid="email-field">
-            { email }
-          </h3>
-          <p data-testid="total-field">
-            0
-          </p>
-          <p data-testid="header-currency-field">
-            BRL
-          </p>
+          <p data-testid="email-field">{email}</p>
+          <p data-testid="total-field">{parseFloat(total).toFixed(2)}</p>
+          <p data-testid="header-currency-field">BRL</p>
         </header>
-        <main>
-          <ExpensesForm currencies={ currencies } />
-        </main>
+        <ExpenseForm currencies={ currencies } />
       </div>
     );
   }
 }
 
+const mapStateToProps = ({ user, wallet }) => ({
+  email: user.email,
+  total: wallet.total,
+  currencies: wallet.currencies,
+});
+
 Wallet.propTypes = {
   email: PropTypes.string.isRequired,
-  getAllCurrencies: PropTypes.func.isRequired,
+  total: PropTypes.number,
+  dispatch: PropTypes.func.isRequired,
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  email: state.user.email,
-  currencies: state.wallet.currencies,
-});
+Wallet.defaultProps = {
+  total: 0,
+};
 
-const mapDispatchToProps = (dispatch) => ({
-  getAllCurrencies: () => {
-    dispatch(fetchCurrenciesAllThunk());
-  },
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Wallet);
+export default connect(mapStateToProps)(Wallet);
