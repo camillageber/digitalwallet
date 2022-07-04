@@ -32,4 +32,6 @@ const wallet = (state = INITIAL_STATE, action) => {
 
 export default wallet;
 
+// https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
+
 // algumas dúvidas retiradas no slack: https://trybecourse.slack.com/archives/C0320DL79QS/p1656798292263889

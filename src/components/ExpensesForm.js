@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { saveExpenses, fetchExpensesThunk } from '../actions';
 
-class WalletForm extends React.Component {
+class ExpensesForm extends React.Component {
   state = {
     value: 0,
     description: '',
@@ -102,9 +102,9 @@ const mapStateToProps = ({ wallet }) => ({
   currencies: wallet.currencies,
 });
 
-WalletForm.propTypes = {
+ExpensesForm.propTypes = {
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(WalletForm);
+export default connect(mapStateToProps)(ExpensesForm);
