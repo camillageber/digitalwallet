@@ -11,19 +11,19 @@ export const saveLogin = (email) => ({
   payload: email,
 });
 
-export const getAllCurrencies = (curencies) => ({
-  type: GET_ALL_CURRENCIES,
-  payload: Object.keys(curencies),
-});
+// export const getAllCurrencies = (curencies) => ({
+//   type: GET_ALL_CURRENCIES,
+//   payload: Object.keys(curencies),
+// });
 
-export const fetchCurrenciesAllThunk = () => async (dispach) => {
-  const resultApi = await fetchApiAll();
-  dispach(getAllCurrencies(resultApi));
-};
+// export const fetchCurrenciesAllThunk = () => async (dispach) => {
+//   const resultApi = await fetchApiAll();
+//   dispach(getAllCurrencies(resultApi));
+// };
 
-export const saveCurrencies = (payload) => ({
+export const saveCurrencies = (currencies) => ({
   type: SAVE_CURRENCIES,
-  payload,
+  payload: currencies,
 });
 
 export const saveExpenses = (payload) => ({
@@ -31,14 +31,28 @@ export const saveExpenses = (payload) => ({
   payload,
 });
 
-export const fetchExpensesThunk = (action, objWallet) => async (dispatch) => {
-  try {
-    const url = await fetch('https://economia.awesomeapi.com.br/json/all');
-    const apiData = await url.json();
-    dispatch(action({ ...objWallet, exchangeRates: apiData }));
-  } catch (error) {
-    console.log(error);
-  }
+// export const fetchExpensesThunk = (action, objWallet) => async (dispatch) => {
+//   try {
+//     const url = await fetch('https://economia.awesomeapi.com.br/json/all');
+//     const apiData = await url.json();
+//     dispatch(action({ ...objWallet, exchangeRates: apiData }));
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
+export const fetchCurrenciesAllThunk = () => async (dispatch) => {
+  const data = await fetchApiAll();
+
+  dispatch(
+    saveCurrencies(
+      Object.keys(data).filter((currencie) => currencie !== 'USDT'),
+    ),
+  );
 };
 
-// fonte: ajuda nesse requisito dos colegas na sala de estudos.
+export const fetchExpensesThunk = (expense) => async (dispatch) => {
+  await dispatch(saveExpenses(expense));
+};
+
+// Auxílio nos requisitos 6, 7 e 8 do colega Carlos Daniel na sala de estudos.

@@ -1,31 +1,44 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { saveExpenses, fetchExpensesThunk } from '../actions';
+import { fetchExpensesThunk } from '../actions';
+import fetchApiAll from '../services/FetchApiAll';
 
 class ExpensesForm extends React.Component {
   state = {
-    value: 0,
+    value: '',
     description: '',
     currency: 'USD',
     method: 'Dinheiro',
     tag: 'Alimentação',
     id: 0,
+    exchangeRates: null,
   }
 
   handleChange = ({ target: { id, value } }) => {
     this.setState({ [id]: value });
   }
 
-  handleClick = () => {
-    const { dispatch } = this.props;
-    dispatch(fetchExpensesThunk(saveExpenses, { ...this.state }));
-    this.setState((prevState) => ({
-      id: prevState.id + 1,
-      value: 0,
-      description: '',
-    }));
-  }
+  // https://www.horadecodar.com.br/2020/12/11/remover-propriedade-de-objeto-javascript/
+  // Auxílio nos requisitos 6, 7 e 8 do colega Carlos Daniel na sala de estudos.
+  handleClick = async () => {
+    const { findTotal } = this.props;
+
+    const fetchCurrencies = await fetchApiAll();
+    delete fetchCurrencies.USDT;
+
+    this.setState({ exchangeRates: fetchCurrencies }, () => {
+      const { fetchExpenses } = this.props;
+      fetchExpenses(this.state);
+      this.setState((previousState) => ({
+        id: previousState.id + 1,
+        value: '',
+        description: '',
+      }));
+    });
+
+    findTotal();
+  };
 
   render() {
     const { currencies } = this.props;
@@ -98,13 +111,18 @@ class ExpensesForm extends React.Component {
   }
 }
 
-const mapStateToProps = ({ wallet }) => ({
-  currencies: wallet.currencies,
+const mapDispatchToProps = (dispatch) => ({
+  fetchExpenses: (state) => dispatch(fetchExpensesThunk(state)),
+});
+
+const mapStateToProps = (state) => ({
+  currencies: state.wallet.currencies,
 });
 
 ExpensesForm.propTypes = {
   currencies: PropTypes.arrayOf(PropTypes.string).isRequired,
-  dispatch: PropTypes.func.isRequired,
+  fetchExpenses: PropTypes.func.isRequired,
+  findTotal: PropTypes.func.isRequired,
 };
 
-export default connect(mapStateToProps)(ExpensesForm);
+export default connect(mapStateToProps, mapDispatchToProps)(ExpensesForm);
